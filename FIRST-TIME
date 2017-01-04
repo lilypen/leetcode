@@ -1,0 +1,3137 @@
+﻿4.
+method 1: two pointors
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int med=(nums1.size()+nums2.size())/2,i=0,j=0,count=0;
+        int num=0;
+        double median;
+        if((nums1.size()+nums2.size())%2==0)
+        {
+        while(i<nums1.size()&&j<nums2.size())
+        {
+            if(nums1[i]<nums2[j])
+            {
+                if(count==med-1)
+                {
+                    num=nums1[i];
+                }
+                if(count==med)
+                {
+                    num+=nums1[i];
+                    break;
+                }
+                i++;
+            }
+            else 
+            {
+                if(count==med-1)
+                {
+                    num=nums2[j];
+                }
+                if(count==med)
+                {
+                    num+=nums2[j];
+                    break;
+                }
+                j++;
+            }
+            count++;
+            
+        }
+        while(i==nums1.size()&&j<nums2.size())
+        {
+            if(count==med-1)
+                {
+                    num=nums2[j];
+                }
+            if(count==med)
+                {
+                    num+=nums2[j];
+                    break;
+                }
+                j++;
+                count++;
+        }
+        while(i<nums1.size()&&j==nums2.size())
+        {
+            if(count==med-1)
+                {
+                    num=nums1[i];
+                }
+                if(count==med)
+                {
+                    num+=nums1[i];
+                    break;
+                }
+                i++;
+                count++;
+        }
+        median=(double)(num)/2;
+            
+        }
+        else
+        {
+        while(i<nums1.size()&&j<nums2.size())
+        {
+            if(nums1[i]<nums2[j])
+            {
+                if(count==med)
+                {
+                    num=nums1[i];
+                    break;
+                }
+                
+                i++;
+            }
+            else 
+            {
+                if(count==med)
+                {
+                    num=nums2[j];
+                    break;
+                }
+                
+                j++;
+            }
+            count++;
+            
+        }
+        while(i>=nums1.size()&&j<nums2.size())
+        {
+            if(count==med)
+                {
+                    num=nums2[j];
+                    break;
+                }
+                
+                j++;
+                count++;
+        }
+        while(i<nums1.size()&&j>=nums2.size())
+        {
+            if(count==med)
+                {
+                    num=nums1[i];
+                    break;
+                }
+                
+                i++;
+                count++;
+        }
+        median=num;
+        }
+        return median;
+    }
+};
+
+method 2:merge first,sort.
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        nums1.insert(nums1.begin(),nums2.begin(),nums2.end());
+        sort(nums1.begin(),nums1.end());
+        double num;
+        if(nums1.size()%2==0)
+        {
+            num=(double)(nums1[nums1.size()/2-1]+nums1[nums1.size()/2])/2;
+        }
+        else 
+        {
+            num=nums1[nums1.size()/2];
+        }
+        
+        return num;
+    }
+};
+
+method 3: find the k smallest number(iterative)
+double findKth(int a[], int m, int b[], int n, int k)  
+{  
+    //always assume that m is equal or smaller than n  
+    if (m > n)  
+        return findKth(b, n, a, m, k);  
+    if (m == 0)  
+        return b[k - 1];  
+    if (k == 1)  
+        return min(a[0], b[0]);  
+    //divide k into two parts  
+    int pa = min(k / 2, m), pb = k - pa;  
+    if (a[pa - 1] < b[pb - 1])  
+        return findKth(a + pa, m - pa, b, n, k - pa);  
+    else if (a[pa - 1] > b[pb - 1])  
+        return findKth(a, m, b + pb, n - pb, k - pb);  
+    else  
+        return a[pa - 1];  
+}  
+  
+class Solution  
+{  
+public:  
+    double findMedianSortedArrays(int A[], int m, int B[], int n)  
+    {  
+        int total = m + n;  
+        if (total & 0x1)  
+            return findKth(A, m, B, n, total / 2 + 1);  
+        else  
+            return (findKth(A, m, B, n, total / 2)  
+                    + findKth(A, m, B, n, total / 2 + 1)) / 2;  
+    }  
+};  
+
+
+
+6.
+class Solution {
+public:
+    string convert(string s, int numRows) {
+       string res;
+       string tmp[numRows];
+       int n=numRows;
+       int count=0,dir=0;//dir 0 represents +,1 represents -
+       if(numRows==1)//or count will become -1
+       {
+           return s;
+       }
+       else
+       {
+       for(int i=0;i<s.size();i++)
+       {
+           if(dir==0)
+           {               
+               tmp[count].push_back(s[i]);
+               if(count==n-1)
+               {
+                   dir=1;
+                   count--;
+               }
+               else
+               {
+                   count++;
+
+               }
+           }
+           else
+           {
+               //cout<<"0"<<endl;
+               tmp[count].push_back(s[i]);
+               if(count==0)
+               {
+                   dir=0;
+                   count++;
+               }
+               else
+               {
+                   count--;
+               }
+           }
+       }
+       for(int i=0;i<n;i++)
+       {
+           res+=tmp[i];
+       }
+       
+       return res;
+       }
+   }
+};
+
+
+9. Palindrome Number
+class Solution {
+public:
+    bool isPalindrome(int x) {
+        //if(x<0) x=-x;
+        int sum=0,num=x;
+        while(x>0)
+        {
+            sum=sum*10+x%10;
+            x=x/10;
+        }
+        if(sum == num)//x is changed
+        return true;
+        else
+        return false;
+    }
+};
+
+
+12.
+class Solution {
+public:
+    string intToRoman(int num) {
+        string st[4][10]=
+        {
+          {"","I","II","III","IV","V","VI","VII","VIII","IX"},
+          {"","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"},
+          {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"},
+          {"","M","MM","MMM"}
+        };
+        string s;
+        
+        s=s+(st[3][num/1000]);
+        num=num%1000;
+        s+=(st[2][num/100]);
+        num=num%100;
+        s+=(st[1][num/10]);
+        num=num%10;
+        s+=(st[0][num/1]);
+        return s;
+        
+    }
+};
+
+
+13.
+class Solution {
+public:
+    int romanToInt(string s) {
+        int res=0;
+        for(int i=s.size()-1;i>=0;i--)
+        {
+            switch(s[i])
+            {
+            case 'I':res+=(res>=5?-1:1);break;
+            case 'V':res+=5;break;
+            case 'X':res+=(res>=50?-10:10);break;
+            case 'L':res+=50;break;
+            case 'C':res+=(res>=500?-100:100);break;
+            case 'D':res+=500;break;
+            case 'M':res+=1000;break;
+            }
+        }
+        return res;
+    }
+};
+
+
+14.
+method:string
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        
+        if(strs.size()==0)
+        return "";
+        else
+        {
+            string res=strs[0];
+       
+        for(int i=1;i<strs.size();i++)
+        {
+            int j;
+            for(j=0;j<strs[i].size();j++)
+            {
+                if(strs[i][j]!=res[j])
+                {
+                    res.erase(res.begin()+j,res.end());
+                    break;
+                }
+            }
+            res.erase(res.begin()+j,res.end());//strs[i] is shortter than res
+        }
+        return res;
+        }
+    }
+};
+
+
+21. Merge Two Sorted Lists 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(!l1) return l2;
+        if(!l2) return l1;
+        ListNode* res=new ListNode(INT_MIN);
+        ListNode* pre=res,*post=l1;
+        res->next=l1;
+        while(l2)
+        {
+            if(l2->val>=pre->val&&l2->val<=post->val)
+            {
+                ListNode* tmp=l2->next;
+                pre->next=l2;
+                l2->next=post;
+                l2=tmp;
+                pre=pre->next;
+            }
+            else
+            {
+            pre=pre->next;
+            post=post->next;
+            }
+            if(post==NULL)
+            {
+                pre->next=l2;
+                break;
+            }
+        }
+        return res->next;
+    }
+};
+
+24. Swap Nodes in Pairs
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if(head==NULL||head->next==NULL)
+        return head;
+        ListNode* pre=head,* ppre=head,*post=head->next;
+        head=head->next;
+        while(pre&&post)
+        {
+            if(ppre!=pre)
+            ppre->next=post;
+            pre->next=post->next;
+            post->next=pre;
+            ppre=pre;
+            pre=pre->next;
+            if(pre)
+            {
+            post=pre->next;
+            }
+            else 
+            {
+            post=NULL;
+            }
+        }
+        
+        return head;
+        
+    }
+};
+
+
+25. Reverse Nodes in k-Group
+my method
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        if(head==NULL) return head;
+        ListNode* post=head,*pre=head->next,*ppre=head,*newhead=new ListNode(0),*pppre=newhead;
+        newhead->next=head;
+        while(post)
+        {
+            int count=0;
+            while(count++!=k)
+            {
+                if(post==NULL)
+                return newhead->next;
+                post=post->next;
+            }
+            ppre->next=post;
+            ListNode* f=ppre;
+            while(pre!=post)
+            {
+                ListNode* tmp=pre->next;
+                pre->next=ppre;
+                ppre=pre;
+                pre=tmp;
+            }
+            pppre->next=ppre;
+            pppre=f;
+            if(post&&post->next)
+            {
+            pre=post->next;
+            ppre=post;
+            }
+            else
+            return newhead->next;
+        }
+        return newhead->next;
+    }
+};
+
+
+29. Divide Two Integers
+method:bit manipulation
+In this problem, we are asked to divide two integers. However, we are not allowed to use division, multiplication and mod operations. So, what else can we use? Yeah, bit manipulations.
+
+Let's do an example and see how bit manipulations work.
+
+Suppose we want to divide 15 by 3, so 15 is dividend and 3 is divisor. Well, division simply requires us to find how many times we can subtract the divisor from the the dividend without making the dividend negative.
+
+Let's get started. We subtract 3 from 15 and we get 12, which is positive. Let's try to subtract more. Well, we shift 3 to the left by 1 bit and we get 6. Subtracting 6 from 15 still gives a positive result. Well, we shift again and get 12. We subtract 12 from 15 and it is still positive. We shift again, obtaining 24 and we know we can at most subtract 12. Well, since 12 is obtained by shifting 3 to left twice, we know it is 4 times of 3. How do we obtain this 4? Well, we start from 1 and shift it to left twice at the same time. We add 4 to an answer (initialized to be 0). In fact, the above process is like 15 = 3 * 4 + 3. We now get part of the quotient (4), with a remainder 3.
+
+Then we repeat the above process again. We subtract divisor = 3 from the remaining dividend = 3 and obtain 0. We know we are done. No shift happens, so we simply add 1 << 0 to the answer.
+
+Now we have the full algorithm to perform division.
+
+According to the problem statement, we need to handle some exceptions, such as overflow.
+
+Well, two cases may cause overflow:
+
+divisor = 0;
+dividend = INT_MIN and divisor = -1 (because abs(INT_MIN) = INT_MAX + 1).
+Of course, we also need to take the sign into considerations, which is relatively easy.
+
+class Solution {
+public:
+    int divide(int dividend, int divisor) {
+        if(divisor==0||(dividend==INT_MIN&&divisor==-1)) return INT_MAX;
+        int sign=((dividend<0)^(divisor<0))?-1:1;
+        long dvd=labs(dividend);
+        long dvs=labs(divisor);
+        int res=0;
+        while(dvd>=dvs)
+        {
+            long tmp=dvs,multiple=1;//用long不用int
+            while(dvd>=(tmp<<1))
+            {
+                tmp<<=1;
+                multiple<<=1;
+            }
+            dvd-=tmp;
+            res+=multiple;
+        }
+        return sign==1?res:-res;
+    }
+};
+
+
+
+39.
+class Solution {
+public:
+    std::vector<std::vector<int> > combinationSum(std::vector<int> &candidates, int target) {
+        std::sort(candidates.begin(), candidates.end());
+        std::vector<std::vector<int> > res;
+        std::vector<int> combination;
+        combinationSum(candidates, target, res, combination, 0);
+        return res;
+    }
+private:
+    void combinationSum(std::vector<int> &candidates, int target, std::vector<std::vector<int> > &res, std::vector<int> &combination, int begin) {
+        if  (!target) {
+            res.push_back(combination);
+            return;
+        }
+        for (int i = begin; i != candidates.size() && target >= candidates[i]; ++i) {
+            combination.push_back(candidates[i]);
+            combinationSum(candidates, target - candidates[i], res, combination, i);
+            combination.pop_back();
+        }
+    }
+};
+
+40.
+class Solution {
+public:
+    void backtrack(vector<vector<int>>& res,vector<int> candidates,vector<int> combination,int target,int begin)
+    {
+        if(!target)
+        {
+            
+            res.push_back(combination);
+        }
+        else if(target>0)//\B2\BBָ\C3\F7target>0\B3\ACʱ
+        {
+        for(int i=begin;i<candidates.size();i++)
+        {
+            combination.push_back(candidates[i]);
+            backtrack(res,candidates,combination,target-candidates[i],i+1);
+            combination.pop_back();
+        }
+        }
+    }
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> res;
+        sort(candidates.begin(),candidates.end());
+        int i;
+        for(i=0;i<candidates.size();i++)//\B3\ACʱ
+        {
+            if(candidates[i]>target)
+            {
+                break;
+            }
+        }
+        candidates.erase(candidates.begin()+i,candidates.end());
+        backtrack(res,candidates,{},target,0);
+        sort(res.begin(),res.end());
+        vector<vector<int>>::iterator it=unique(res.begin(),res.end());
+        res.erase(it,res.end());
+        return res;
+         
+    }
+};
+
+
+
+42. Trapping Rain Water
+my method 1:stack
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        stack<int> s;
+        int size=height.size();
+        if(size<=2) return 0;
+        int back=0,sum=0;
+        for(int i=0;i<size;i++)
+        {
+            //cout<<i<<endl;
+            if(s.empty())
+            {
+                
+                if(height[i]!=0)
+                {
+                s.push(i);
+                back=i;
+                //cout<<i<<endl;
+                }
+            }
+            else if(height[i]<height[back])
+            {
+                s.push(i);
+            }
+            else
+            {
+                while(!s.empty())
+                {
+                    int tmp=s.top();
+                    s.pop();
+                    if(height[back]-height[tmp]>0) sum+=height[back]-height[tmp];
+                    cout<<height[back]-height[tmp]<<",";
+                }
+                s.push(i);
+                back=i;
+                //cout<<i<<",";
+            }
+            
+        }
+        if(s.size()>2)//反向再来一次
+        {
+        while(!s.empty()) s.pop();
+       // cout<<1<<endl;
+        for(int i=size-1;i>=0;i--)
+        {
+            if(s.empty())
+            {
+                if(height[i]!=0)
+                {
+                s.push(i);
+                back=i;
+                }
+            }
+            else if(height[i]<=height[back])//相等的情况前面算过了
+            {
+                s.push(i);
+                //cout<<i;
+            }
+            else
+            {
+                while(!s.empty())
+                {
+                    int tmp=s.top();
+                    s.pop();
+                    if(height[back]-height[tmp]>0) sum+=height[back]-height[tmp];
+                    //cout<<tmp;
+                }
+                s.push(i);
+                back=i;
+            }
+            
+        }
+        }
+        return sum;
+        
+    }
+};
+
+stack 的另一个method 不太懂
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        stack<int> s;
+        int max_water(0);
+        int i(0);
+        while (i<height.size()) {
+            if (s.empty()||height[i]<=height[s.top()]) {
+                s.push(i++);
+            } else {
+                int bot=height[s.top()];
+                s.pop();
+                max_water+=s.empty()?0:((min(height[i],height[s.top()])-bot)*(i-s.top()-1));
+            }
+        }
+        return max_water;
+    }
+};
+
+
+method 2:two pointers
+Here is my idea: instead of calculating area by height*width, we can think it in a cumulative way. In other words, sum water amount of each bin(width=1).
+Search from left to right and maintain a max height of left and right separately, which is like a one-side wall of partial container. Fix the higher one and flow water from the lower part. For example, if current height of left is lower, we fill water in the left bin. Until left meets right, we filled the whole container.
+
+class Solution {
+public:
+    int trap(int A[], int n) {
+        int left=0; int right=n-1;
+        int res=0;
+        int maxleft=0, maxright=0;
+        while(left<=right){
+            if(A[left]<=A[right]){
+                if(A[left]>=maxleft) maxleft=A[left];
+                else res+=maxleft-A[left];
+                left++;
+            }
+            else{
+                if(A[right]>=maxright) maxright= A[right];
+                else res+=maxright-A[right];
+                right--;
+            }
+        }
+        return res;
+    }
+};
+
+
+
+61. Rotate List
+my method:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        ListNode* slow=head,*fast=head,*preslow=head,*prefast;
+        int len=0;
+        while(fast!=NULL) 
+        {
+            fast=fast->next;
+            len++;
+        }
+        if(len==0||k%len==0) return head;//if len=0,then k%len will WTE
+        k=k%len;
+        fast=head;
+        while(k--!=0&&fast!=NULL) fast=fast->next;
+        while(fast!=NULL)
+        {
+            preslow=slow;
+            slow=slow->next;
+            prefast=fast;
+            fast=fast->next;
+        }
+        preslow->next=NULL;
+        prefast->next=head;
+        return slow;
+        
+        
+    }
+};
+
+
+
+
+71. Simplify Path
+method: stack
+重复连续出现的'/'，只按1个处理，即跳过重复连续出现的'/'；
+如果路径名是"."，则不处理；
+如果路径名是".."，则需要弹栈，如果栈为空，则不做处理；
+如果路径名为其他字符串，入栈。
+class Solution {
+public:
+    string simplifyPath(string path) {
+        stack<string> s,copys;
+        int i=0;
+        while(i!=path.size())
+        {
+            while(i!=path.size()&&path[i]=='/') i++;
+            if(i==path.size()) break;
+            int start=i;
+            while(i!=path.size()&&path[i]!='/') i++;
+            string str=path.substr(start,i-start);
+            if(!s.empty()&&str=="..") s.pop();
+            if(str!="."&&str!="..") s.push(str);
+        }
+        string res;
+        while(!s.empty())
+        {
+            copys.push(s.top());
+            s.pop();
+        }
+        while(!copys.empty())//can just use vector
+        {
+            res+="/"+copys.top();
+            copys.pop();
+        }
+        if(res.size()==0) return "/";
+        return res;
+    }
+};
+
+method 2:C++ also have getline which acts like Java's split.!!!
+string simplifyPath(string path) {
+    string res, tmp;
+    vector<string> stk;
+    stringstream ss(path);
+    while(getline(ss,tmp,'/')) {
+        if (tmp == "" or tmp == ".") continue;
+        if (tmp == ".." and !stk.empty()) stk.pop_back();
+        else if (tmp != "..") stk.push_back(tmp);
+    }
+    for(auto str : stk) res += "/"+str;
+    return res.empty() ? "/" : res;
+} 
+
+75. sort colours
+method 1 :First, iterate the array counting number of 0's, 1's, and 2's, then overwrite array with total number of 0's, then 1's and followed by 2's.
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        vector<int> res;
+        int count1=0,count2=0,count3=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]==0)
+            count1++;
+             if(nums[i]==1)
+            count2++;
+             if(nums[i]==2)
+            count3++;
+        }
+        for(int i=0;i<count1;i++)
+        {
+            nums[i]=0;
+        }
+        for(int i=count1;i<count1+count2;i++)
+        {
+            nums[i]=1;
+        }
+        for(int i=count1+count2;i<count1+count2+count3;i++)
+        {
+            nums[i]=2;
+        }
+        
+
+    }
+};
+
+method 2: one-pass, swap
+class Solution {
+public:
+    void sortColors(vector<int>& nums) {
+        vector<int> res;
+        int end=nums.size()-1,begin=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            while(nums[i]==2&&i<end)//note while and i<end. i>begin
+            swap(nums[i],nums[end--]);
+            while(nums[i]==0&&i>begin)
+            swap(nums[i],nums[begin++]);
+            
+            
+        }
+       
+        
+
+    }
+};
+
+
+82.
+my method 1
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(!head) return head;
+        ListNode* newhead=new ListNode(INT_MIN),*pre=newhead,*post=head;
+        int tmp;
+        newhead->next=head;
+        while(post->next)
+        {
+            if(post->next->val==post->val)
+            {
+                tmp=post->val;
+            }
+            if(post->val==tmp)
+            {
+                pre->next=post->next;
+                post=post->next;
+            }
+            else
+            {
+                pre=pre->next;
+                post=post->next;
+            }
+        }
+        if(post->val==tmp)
+        pre->next=post->next;
+        return newhead->next;
+    }
+};
+method 2 i can't understand; recursive
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (!head) return 0;
+        if (!head->next) return head;
+        
+        int val = head->val;
+        ListNode* p = head->next;
+        
+        if (p->val != val) {
+            head->next = deleteDuplicates(p);
+            return head;
+        } else {
+            while (p && p->val == val) p = p->next;
+            return deleteDuplicates(p);
+        }
+    }
+};
+
+86.
+my method 1: delete and insert to another list 
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        if(!head||!head->next) return head;
+        ListNode*new_head=new ListNode(0),* pre=new_head,*post=head,*res=NULL,*cur=res;
+        new_head->next=head;
+        while(post)
+        {
+            if(post->val<x)
+            {
+                if(res==NULL)
+                {
+                    res=post;
+                }
+                else
+                cur->next=post;
+                if(post==head)
+                head=post->next;
+                cur=post;
+                ListNode* tmp=post->next;
+                post->next=NULL;
+                pre->next=tmp;
+                post=tmp;
+            }
+            else
+            {
+                pre=pre->next;
+                post=post->next;
+                //cout<<post->val;
+            }
+        }
+        if(cur)
+        {
+        cur->next=head;
+        return res;
+        }
+        else
+        return head;
+        
+        
+    }
+};
+
+method 2  just apend after two list;
+class Solution {
+public:
+    ListNode* partition(ListNode* head, int x) {
+        ListNode* p1=new ListNode(0),*p2=new ListNode(0),*pre=p1,*post=p2;
+        
+        while(head)
+        {
+          if(head->val<x)
+          {
+              pre->next=head;
+              pre=pre->next;
+          }
+          else
+          {
+              post->next=head;
+              post=post->next;
+          }
+          head=head->next;
+          
+        }
+        post->next=NULL;
+        pre->next=p2->next;
+        return p1->next;
+        
+        
+    }
+};
+
+92. Reverse Linked List II
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int m, int n) {
+        ListNode* ppre=head,*pre=head,*post=head;
+        int count=1;
+        while(post)
+        {
+            if(count==m-1)
+            {
+                ppre=post;
+                post=post->next;
+            }
+            else if(count>m&&count<=n)
+            {
+                ListNode *tmp=post->next;
+                post->next=pre;
+                pre=post;
+                post=tmp;
+                if(count==n)
+                {
+                    
+                    if(m==1)
+                    {
+                    ppre->next=post;
+                    head=pre;
+                    
+                    }
+                    else
+                    {
+                    ppre->next->next=post;
+                    ppre->next=pre;
+                    }
+                    
+                }
+                
+            }
+            else
+            {
+            pre=post;
+            post=post->next;
+            }
+            count++;
+            
+        }
+        return head;
+    }
+};
+
+method 2:
+ListNode *reverseBetween(ListNode *head, int m, int n) {
+    if(m==n)return head;
+	n-=m;
+    ListNode prehead(0);
+    prehead.next=head;
+    ListNode* pre=&prehead;
+    while(--m)pre=pre->next;        
+    ListNode* pstart=pre->next;
+    while(n--)
+    {
+        ListNode *p=pstart->next;
+        pstart->next=p->next;
+        p->next=pre->next;
+        pre->next=p;
+    }
+    return prehead.next;
+}
+
+94. Binary Tree Inorder Traversal
+my method 1:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+   void inorderTraversal(TreeNode* root,vector<int> &res)
+   {
+       if(root==NULL) return;
+       inorderTraversal(root->left,res);
+       res.push_back(root->val);
+       inorderTraversal(root->right,res);
+       
+   }
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+         inorderTraversal(root,res);
+         return res;
+    }
+};
+
+my method 2:
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+   
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> res;
+        stack<TreeNode*> st;
+        while(root)
+        {
+            while(root)
+            {
+                st.push(root);
+                root=root->left;
+            }
+            root=st.top();
+            while(root&&root->right==NULL&&!st.empty())
+            {
+                
+            res.push_back(root->val);
+            st.pop();
+            if(!st.empty()) root=st.top();
+            else root=NULL;
+            }
+            if(root)
+            {
+            res.push_back(root->val);
+            st.pop();
+            root=root->right;
+            }
+        }
+        return res;
+    }
+};
+
+100. Same Tree
+my method
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        if(p==NULL&&q==NULL)
+        return true;
+        if((!p&&q)||(!q&&p)||p->val!=q->val)
+        return false;
+        return (isSameTree(p->left,q->left)&&isSameTree(p->right,q->right));
+    }
+};
+
+
+104. Maximum Depth of Binary Tree
+method 1:Depth-first-search
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        int leftheight,rightheight;
+        if(root==NULL)
+        {
+            return 0;
+        }
+        leftheight=maxDepth(root->left);
+        rightheight=maxDepth(root->right);
+        return leftheight>rightheight?leftheight+1:rightheight+1;
+    }
+};
+
+method 2:Breadth-first-search
+int maxDepth(TreeNode *root)
+{
+    if(root == NULL)
+        return 0;
+    
+    int res = 0;
+    queue<TreeNode *> q;
+    q.push(root);
+    while(!q.empty())
+    {
+        ++ res;
+        for(int i = 0, n = q.size(); i < n; ++ i)
+        {
+            TreeNode *p = q.front();
+            q.pop();
+            
+            if(p -> left != NULL)
+                q.push(p -> left);
+            if(p -> right != NULL)
+                q.push(p -> right);
+        }
+    }
+    
+    return res;
+}
+
+
+
+127. Word Ladder
+method:bfs;像这种求最短路径、树最小深度问题bfs最适合(类似于层序遍历二叉树，找到最先遍历到的叶子的层数就是树的最小高度)
+class Solution {
+public:
+    int ladderLength(string beginWord, string endWord, unordered_set<string>& wordList) {
+        queue<string> tovisit;
+        tovisit.push(beginWord);
+        int dist=1;
+        while(!tovisit.empty())
+        {
+            int size=tovisit.size();
+            for(int i=0;i<size;i++)
+            {
+                string word=tovisit.front();
+                tovisit.pop();
+                if(word==endWord) return dist;
+                addNext(word,wordList,tovisit);
+            }
+            dist++;
+        }
+        return 0;
+    }
+    void addNext(string word,unordered_set<string>& wordList,queue<string> &tovisit)
+    {
+        wordList.erase(word);
+        for(int j=0;j<word.size();j++)
+        {
+            char c=word[j];
+            for(int k=0;k<26;k++)
+            {
+                word[j]='a'+k;
+                if(wordList.find(word)!=wordList.end()) 
+                {
+                    tovisit.push(word);
+                    wordList.erase(word);
+                }
+            }
+            word[j]=c;
+        }
+        
+    }
+};
+
+
+
+
+130. Surrounded Regions
+my method :dfs
+First, check the four border of the matrix. If there is a element is
+'O', alter it and all its neighbor 'O' elements to '1'.
+Then ,alter all the 'O' to 'X'
+At last,alter all the '1' to 'O'
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        if(board.size()==0) return;
+        int n=board.size(),m=board[0].size();
+        
+        
+        for(int i=0;i<n;i++)
+        {
+            if(board[i][0]=='O')
+            {
+                dfs(board,i,0,n,m);
+            }
+            if(board[i][m-1]=='O')
+            {
+                dfs(board,i,m-1,n,m);
+            }
+        }
+        for(int j=1;j<m-1;j++)
+        {
+            if(board[0][j]=='O')
+            {
+                dfs(board,0,j,n,m);
+            }
+            if(board[n-1][j]=='O')
+                dfs(board,n-1,j,n,m);
+        }
+        for(int i=0;i<n;i++)
+        for(int j=0;j<m;j++)
+        {
+            //cout<<hs[i][j];
+            if(board[i][j]=='T')
+            board[i][j]='O';
+            else
+            board[i][j]='X';
+            
+        }
+    }
+    void dfs(vector<vector<char>> &board,int i,int j,int n,int m)
+    {
+        if(board[i][j]=='O')
+        {
+            board[i][j]='T';
+            if(i>1) dfs(board,i-1,j,n,m);//shoud be 1 because of the case OOOOOOOOOO XXXXXXXXXO OOOOOOOOOO OXXXXXXXXX OOOOOOOOOO stack overflow;bfs is                           //better
+            if(i<n-1) dfs(board,i+1,j,n,m);
+            if(j>1) dfs(board,i,j-1,n,m);
+            if(j<m-1) dfs(board,i,j+1,n,m);
+        }
+        
+        
+        
+    }
+};
+
+
+method 2:bfs
+void bfsBoundary(vector<vector<char> >& board, int w, int l)
+{
+    int width = board.size();
+    int length = board[0].size();
+    deque<pair<int, int> > q;
+    q.push_back(make_pair(w, l));
+    board[w][l] = 'B';
+    while (!q.empty()) {
+        pair<int, int> cur = q.front();
+        q.pop_front();
+        pair<int, int> adjs[4] = {{cur.first-1, cur.second}, 
+            {cur.first+1, cur.second}, 
+            {cur.first, cur.second-1},
+            {cur.first, cur.second+1}};
+        for (int i = 0; i < 4; ++i)
+        {
+            int adjW = adjs[i].first;
+            int adjL = adjs[i].second;
+            if ((adjW >= 0) && (adjW < width) && (adjL >= 0)
+                    && (adjL < length) 
+                    && (board[adjW][adjL] == 'O')) {
+                q.push_back(make_pair(adjW, adjL));
+                board[adjW][adjL] = 'B';
+            }
+        }
+    }
+}
+
+void solve(vector<vector<char> > &board) {
+    int width = board.size();
+    if (width == 0) //Add this to prevent run-time error!
+        return;
+    int length = board[0].size();
+    if  (length == 0) // Add this to prevent run-time error!
+        return;
+
+    for (int i = 0; i < length; ++i)
+    {
+        if (board[0][i] == 'O')
+            bfsBoundary(board, 0, i);
+
+        if (board[width-1][i] == 'O')
+            bfsBoundary(board, width-1, i);
+    }
+
+    for (int i = 0; i < width; ++i)
+    {
+        if (board[i][0] == 'O')
+            bfsBoundary(board, i, 0);
+        if (board[i][length-1] == 'O')
+            bfsBoundary(board, i, length-1);
+    }
+
+    for (int i = 0; i < width; ++i)
+    {
+        for (int j = 0; j < length; ++j)
+        {
+            if (board[i][j] == 'O')
+                board[i][j] = 'X';
+            else if (board[i][j] == 'B')
+                board[i][j] = 'O';
+        }
+    }
+}
+
+
+
+
+136. Single Number
+method 1 :sort
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        map<int,int> hs;
+        int i;
+        for(i=1;i<nums.size();i=i+2)
+        {
+            if(nums[i]!=nums[i-1])
+            {
+                break;
+                
+            }
+        }
+        return nums[i-1];
+    }
+};
+
+method 2 :bit manipulation
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        int res=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            res=res^nums[i];
+        }
+        return res;
+    }
+};
+
+141. Linked List Cycle
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        //if(!head) return false;
+        ListNode* fast=head,*slow=new ListNode(0);
+        slow->next=head;
+        while(fast&&fast->next)
+        {
+            if(fast==slow)
+            return true;
+            fast=fast->next->next;
+            slow=slow->next;
+        }
+        return false;
+    }
+};
+
+142. Linked List Cycle II
+Alogrithm Description:
+Step 1: Determine whether there is a cycle
+
+1.1) Using a slow pointer that move forward 1 step each time
+
+1.2) Using a fast pointer that move forward 2 steps each time
+
+1.3) If the slow pointer and fast pointer both point to the same location after several moving steps, there is a cycle;
+
+1.4) Otherwise, if (fast->next == NULL || fast->next->next == NULL), there has no cycle.
+
+Step 2: If there is a cycle, return the entry location of the cycle
+
+2.1) L1 is defined as the distance between the head point and entry point
+
+2.2) L2 is defined as the distance between the entry point and the meeting point
+
+2.3) C is defined as the length of the cycle
+
+2.4) n is defined as the travel times of the fast pointer around the cycle When the first encounter of the slow pointer and the fast pointer
+
+According to the definition of L1, L2 and C, we can obtain:
+
+the total distance of the slow pointer traveled when encounter is L1 + L2
+
+the total distance of the fast pointer traveled when encounter is L1 + L2 + n * C
+
+Because the total distance the fast pointer traveled is twice as the slow pointer, Thus:
+
+2 * (L1+L2) = L1 + L2 + n * C => L1 + L2 = n * C => L1 = (n - 1) C + (C - L2)*
+
+It can be concluded that the distance between the head location and entry location is equal to the distance between the meeting location and the entry location along the direction of forward movement.
+
+So, when the slow pointer and the fast pointer encounter in the cycle, we can define a pointer "entry" that point to the head, this "entry" pointer moves one step each time so as the slow pointer. When this "entry" pointer and the slow pointer both point to the same location, this location is the node where the cycle begins.
+
+method:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+         if (head == NULL || head->next == NULL)
+        return NULL;
+        ListNode* fast=head,*slow=head,*entry=head;
+        while(fast->next&&fast->next->next)
+        {
+            fast=fast->next->next;
+            slow=slow->next;
+            if(fast==slow)
+            {
+                while(entry!=slow)
+                {
+                    slow=slow->next;
+                    entry=entry->next;
+                }
+                return entry;
+            }
+           
+        }
+        return NULL;
+    }
+};
+
+
+144.
+method 1: recursive
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res={};
+        preorderTraversal(root,res);
+        return res;
+    }
+    void preorderTraversal(TreeNode* root,vector<int> &res) {
+        if(root==NULL) return;//can't return res,maybe right is not null
+        res.push_back(root->val);
+        preorderTraversal(root->left,res);
+        preorderTraversal(root->right,res);
+    }
+};
+
+method 2: stack
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> res={};
+        stack<TreeNode*> st;
+        
+        while(root)
+        {
+            while(root)
+            {
+                st.push(root);
+                res.push_back(root->val);
+                root=root->left;
+            }
+            while((!st.empty())&&st.top()->right==NULL)
+            {
+                st.pop();
+                
+            }
+            if(st.empty()) return res;
+            root=st.top()->right;
+            st.pop();
+            
+        }
+        return res;
+    }
+
+};
+
+147. Insertion Sort List
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(head==NULL) return head;
+        ListNode* res=new ListNode(INT_MIN);
+        res->next=head;
+        head=head->next;
+        res->next->next=NULL;
+        while(head)
+        {
+            ListNode* tmp=head->next;
+            ListNode* pre=res,*post=res->next;
+            while(post)
+            {
+               if(head->val>=pre->val&&head->val<=post->val)
+                {
+                    head->next=post;
+                    pre->next=head;
+                    break;
+                }
+                pre=pre->next;
+                post=post->next;
+            }
+            if(post==NULL)
+            {
+                pre->next=head;
+                head->next=NULL;
+            }
+            head=tmp;
+        }
+        return res->next;
+    }
+};
+
+
+
+151. Reverse Words in a String
+method:o(1) space ;First, reverse the whole string, then reverse each word. another method is to use stack but not o(1) space
+
+class Solution {
+public:
+
+    void reverseWords(string &s) {
+        reverse(s.begin(),s.end());
+        int storeIndex=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]!=' ')
+            {
+                if(storeIndex!=0) s[storeIndex++]=' ';
+                int end=i;
+                while(end<s.size()&&s[end]!=' ') s[storeIndex++]=s[end++];
+                reverse(s.begin()+storeIndex-(end-i),s.begin()+storeIndex);
+                i=end;
+            }
+        }
+        s.erase(s.begin()+storeIndex,s.end());
+    }
+};
+
+
+
+
+160. 
+my method 1:
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* a=headA,* b=headB;
+        int counta=0,countb=0;
+        while(a)//the size of two list
+        {
+            counta++;
+            a=a->next;
+        }
+        while(b)
+        {
+            countb++;
+            b=b->next;
+        }
+        int tmp=counta-countb>0?counta-countb:countb-counta;
+        ListNode* min=counta-countb>0?headB:headA;
+        ListNode* max=counta-countb>0?headA:headB;
+        for(int i=0;i<tmp;i++)
+        {
+            max=max->next;
+        }
+        while(min)
+        {
+            if(min==max)
+            {
+            return min;
+            }
+            min=min->next;
+            max=max->next;
+        }
+        return NULL;
+    }
+};
+
+method 2: 
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) 
+{
+    ListNode *p1 = headA;
+    ListNode *p2 = headB;
+        
+    if (p1 == NULL || p2 == NULL) return NULL;
+
+    while (p1 != NULL && p2 != NULL && p1 != p2) {
+        p1 = p1->next;
+        p2 = p2->next;
+
+        //
+        // Any time they collide or reach end together without colliding 
+        // then return any one of the pointers.
+        //
+        if (p1 == p2) return p1;
+
+        //
+        // If one of them reaches the end earlier then reuse it 
+        // by moving it to the beginning of other list.
+        // Once both of them go through reassigning, 
+        // they will be equidistant from the collision point.
+        //
+        if (p1 == NULL) p1 = headB;
+        if (p2 == NULL) p2 = headA;
+    }
+        
+    return p1;
+}
+
+
+
+165. Compare Version Numbers
+method:
+class Solution {
+public:
+    int compareVersion(string version1, string version2) {
+        int i = 0; 
+        int j = 0;
+    int n1 = version1.size(); 
+    int n2 = version2.size();
+    
+    int num1 = 0;
+    int num2 = 0;
+    while(i<n1 || j<n2)
+    {
+        while(i<n1 && version1[i]!='.'){
+            num1 = num1*10+(version1[i]-'0');
+            i++;
+        }
+        
+        while(j<n2 && version2[j]!='.'){
+            num2 = num2*10+(version2[j]-'0');
+            j++;
+        }
+        
+        if(num1>num2) return 1;
+        else if(num1 < num2) return -1;
+        
+        num1 = 0;
+        num2 = 0;
+        i++;
+        j++;
+    }
+    
+    return 0;
+    }
+};
+
+
+
+166. Fraction to Recurring Decimal
+method:
+难点：如何识别循环体？
+
+解决方法：用一个HashMap记录每一个余数，当出现重复的余数时，那么将会进入循环，两个重复余数之间的部分就是循环体。
+
+示例：1/13=0.076923076923076923...，当小数部分第二次出现0时，就意味着开始了循环，那么需要把076923用括号括起来，结果为0.(076923)。
+
+涉及技巧：1）在不断相除的过程中，把余数乘以10再进行下一次相除，保证一直是整数相除；2）HashMap的key和value分别是<当前余数, 对应结果下标>，这样获取076923时就可根据value值来找。
+
+注意点1：考虑正负数，先判断符号，然后都转化为正数；
+
+注意点2：考虑溢出，如果输入为Integer.MIN_VALUE，取绝对值后会溢出。
+
+class Solution {
+public:
+    string fractionToDecimal(int numerator, int denominator) {
+        if(denominator==0) return "";
+        if(numerator==0) return "0";//not -0
+        
+        string res;
+        if(numerator<0^denominator<0) res+="-";
+        
+        long n=labs(numerator);//avoid INT_MIN to flow
+        long d=labs(denominator);
+        
+        res+=to_string(n/d);
+        long r=n%d;
+        if(r==0) return res;
+        
+        res+=".";
+        map<long,int> hs;
+        while(r!=0)
+        {
+            if(hs.find(r)!=hs.end())
+            {
+                res.insert(hs[r],1,'(');
+                res+=")";
+                return res;
+            }
+            
+            hs[r]=res.size();
+            r*=10;
+            res+=to_string(r/d);
+            r=r%d;
+            
+        }
+        return res;
+    }
+};
+
+
+179. Largest Number
+method:
+排序（Sort）
+
+排序思路：对于两个备选数字a和b，如果str(a) + str(b) > str(b) + str(a)，则a在b之前，否则b在a之前
+
+按照此原则对原数组从大到小排序即可
+class Solution {
+public:
+    string largestNumber(vector<int>& nums) {
+        sort(nums.begin(),nums.end(),cmp);
+        string res;
+        for(int i:nums)
+        {
+            res+=to_string(i);
+        }
+        if(res.size()>1&&res[0]=='0') res="0";//{0,0}
+        return res;
+    }
+    static bool cmp(int a, int b)
+    {
+        string c=to_string(a);
+        string d=to_string(b);
+        return c+d>d+c;
+    }
+};
+
+
+
+190. Reverse Bits
+method: bit manipulation
+class Solution {
+public:
+    uint32_t reverseBits(uint32_t n) {
+           n = (n >> 16) | (n << 16);
+        n = ((n & 0xff00ff00) >> 8) | ((n & 0x00ff00ff) << 8);
+        n = ((n & 0xf0f0f0f0) >> 4) | ((n & 0x0f0f0f0f) << 4);
+        n = ((n & 0xcccccccc) >> 2) | ((n & 0x33333333) << 2);
+        n = ((n & 0xaaaaaaaa) >> 1) | ((n & 0x55555555) << 1);
+        return n;
+    }
+};
+
+
+
+201. Bitwise AND of Numbers Range
+method:bit
+让我们从最低位开始。
+如果这一组数字的最低位不相同的话，那这一位就肯定会被消掉，变成0.如果m!=n,那最低位肯定是要被消掉的，因为最低位肯定会是一个0，一个1(n,m不相同,说明至少m,m+1是包括在里面的).这时，我们可以将m和n都右移一位，将最后一位忽略。
+
+此时，又有了新的一组m和n。如果此时m=n,那结果就是m了。如果不是的话，那可以继续上一段的过程，将m和n右移一位。
+class Solution {
+public:
+    int rangeBitwiseAnd(int m, int n) {
+        int count=0;
+        while(m!=n)
+        {
+            m>>=1;
+            n>>=1;
+            count++;
+        }
+        return m<<count;
+    }
+};
+
+
+
+
+202. Happy Number
+method :the Floyd Cycle detection algorithm,like the two pointors 
+class Solution {
+public:
+    int digitSquareSum(int n) {
+    int sum = 0, tmp;
+    while (n) {
+        tmp = n % 10;
+        sum += tmp * tmp;
+        n /= 10;
+    }
+    return sum;
+}
+
+bool isHappy(int n) {
+    int slow, fast;
+    slow = fast = n;
+    do {
+        slow = digitSquareSum(slow);
+        fast = digitSquareSum(fast);
+        fast = digitSquareSum(fast);
+    } while(slow != fast);
+    if (slow == 1) return 1;
+    else return 0;
+}
+};
+
+
+203.  Remove Linked List Elements
+method: linklist
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* res=head,* pre=head;
+        
+        while(head!=NULL)
+        {
+            if(head->val==val)
+            {
+                if(head==res)
+                {
+                    res=head->next;
+                }
+               pre->next=head->next;
+               auto tmp=head;
+               head=head->next;
+               delete tmp;
+            }
+            else
+            {
+             pre=head;
+             head=head->next;
+            }
+        }
+        return res;
+    }
+};
+
+method 2:recursive(java)
+public ListNode removeElements(ListNode head, int val) {
+        if (head == null) return null;
+        head.next = removeElements(head.next, val);
+        return head.val == val ? head.next : head;
+}
+
+
+206. Reverse Linked List
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+      ListNode* pre=NULL;
+      while(head)
+      {
+          ListNode* post=head->next;
+          head->next=pre;
+          pre=head;
+          head=post;
+      }
+      return pre;
+    }
+};
+
+
+
+210. Course Schedule II
+mymethod: bfs
+class Solution {
+public:
+    vector<int> findOrder(int numCourses, vector<pair<int, int>>& prerequisites) {
+        vector<unordered_set<int>> graph=make_graph(numCourses,prerequisites);
+        vector<int> indegree=compute_indegree(numCourses,graph);
+        vector<int>  res;
+        for(int i=0;i<numCourses;i++)
+        {
+            int j=0;
+            for(j=0;j<numCourses;j++)
+            {
+                if(indegree[j]==0) break;
+            }
+            if(j==numCourses) return {};
+            res.push_back(j);
+            indegree[j]--;
+            for(int k:graph[j])
+            indegree[k]--;
+        }
+        return res;
+    }
+    vector<unordered_set<int>> make_graph(int numCourses, vector<pair<int, int>>& prerequisites)
+    {
+        vector<unordered_set<int>> graph(numCourses);
+        for(pair<int, int> p:prerequisites)
+        {
+            graph[p.second].insert(p.first);
+        }
+        return graph;
+    }
+    vector<int> compute_indegree(int numCourses,vector<unordered_set<int>> graph)
+    {
+        vector<int> indegree(numCourses,0);
+        for(auto s:graph)
+        {
+            for(int i:s)
+            {
+                indegree[i]++;
+            }
+        }
+        return indegree;
+    }
+};
+
+
+
+
+216.
+class Solution {
+public:
+    void backtrack(vector<vector<int>> &res,vector<int> candidates,vector<int> combination,int target,int begin,int k)
+    {
+        if(!target&&combination.size()==k)
+        {
+            //if(combination.size()==k)
+            res.push_back(combination);
+            return;//return 
+        }
+       
+     for(int i=begin;i<9&&target>=candidates[i];i++)//һ\B6\A8Ҫ\BC\D3&&\A3\A1
+        {
+            if(combination.size()<=k)
+            {
+            combination.push_back(candidates[i]);
+            backtrack(res,candidates,combination,target-candidates[i],i+1,k);
+            combination.pop_back();
+            }
+            
+        }
+       }
+    vector<vector<int>> combinationSum3(int k, int n) {
+        vector<vector<int>> res;
+        vector<int> candidates={1,2,3,4,5,6,7,8,9};
+         if(n>45)
+        return {};
+        else
+        {
+        backtrack(res,candidates,{},n,0,k);
+        return res;
+        }
+        
+    }
+};
+
+217. Contains Duplicate
+method:hash table
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        map<int,int> hs;
+        for(int i=0;i<nums.size();i++)
+        {
+            hs[nums[i]]++;
+            if(hs[nums[i]]>1)
+            {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+};
+
+219.
+hash table
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        map<int,int> hs;
+        for(int i=0;i<nums.size();i++)
+        {
+            
+            if(hs.find(nums[i])==hs.end())
+            {
+                hs[nums[i]]=i;
+            }
+            else
+            {
+                if(i-hs[nums[i]]<=k)
+                {
+                return true;
+                break;
+                }
+                else
+                {
+                    hs[nums[i]]=i;
+                }
+                
+            }
+        }
+        return false;
+    }
+};
+
+220. Contains Duplicate III
+method:set ,lower_bound,binary search
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        set<int> window; // set is ordered automatically 
+    for (int i = 0; i < nums.size(); i++) {
+        if (i > k) window.erase(nums[i-k-1]); // keep the set contains nums i j at most k
+        
+        // |x - nums[i]| <= t  ==> -t <= x - nums[i] <= t;
+        // lower_bound(val):return the first iterator which >= val using binary search method
+        auto pos = window.lower_bound(nums[i] - t); // x-nums[i] >= -t ==> x >= nums[i]-t  
+        // x - nums[i] <= t ==> |x - nums[i]| <= t    
+        if (pos != window.end() && *pos - nums[i] <= t) return true;
+        window.insert(nums[i]);
+    }
+    return false;
+    }
+};
+
+226.
+my method 1: Recursive
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        TreeNode* tree=root,*tmp;
+        if(tree==NULL)
+        return root;
+        tmp=invertTree(tree->right);
+        tree->right=invertTree(tree->left);
+        tree->left=tmp;
+        return root;
+        
+    }
+};
+
+method 2: Non-Recursive
+TreeNode* invertTree(TreeNode* root) {
+    std::stack<TreeNode*> stk;
+    stk.push(root);
+    
+    while (!stk.empty()) {
+        TreeNode* p = stk.top();
+        stk.pop();
+        if (p) {
+            stk.push(p->left);
+            stk.push(p->right);
+            std::swap(p->left, p->right);
+        }
+    }
+    return root;
+}
+
+
+
+227. Basic Calculator II
+method:
+class Solution {
+public:
+    int calculate(string s) {
+       istringstream in("+"+s+"+");
+       int res=0,temp=0,n;
+       char op;
+       while(in>>op)
+       {
+           if(op=='+'||op=='-')
+           {
+               res+=temp;
+               in>>temp;
+               temp=op=='+'?temp:-temp;
+           }
+           else
+           {
+               in>>n;
+               temp=op=='*'?temp*n:temp/n;
+           }
+       }
+        return res;
+        
+    }
+};
+
+
+
+228. Summary Ranges
+my method:
+class Solution {
+public:
+    vector<string> summaryRanges(vector<int>& nums) {
+        int i=0;
+        vector<string> res;
+        while(i<nums.size())
+        {
+            string s=to_string(nums[i]);
+            int start=i;
+            i++;
+            while(i<nums.size()&&nums[i]==nums[i-1]+1)
+            {
+                i++;
+            }
+            if(i-1!=start)
+            s+="->"+to_string(nums[i-1]);
+            res.push_back(s);
+        }
+        return res;
+    
+    }
+};
+
+
+
+
+230. Kth Smallest Element in a BST
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+int value=0;
+int count=0;
+void inorder(TreeNode* root)
+{
+    if(root==NULL) return;
+   inorder(root->left);
+   count--;
+    if(count==0) 
+    {
+        value=root->val;
+        return;
+    
+    }
+   inorder(root->right);
+}
+    int kthSmallest(TreeNode* root, int k) {
+        count=k;
+        inorder(root);
+        
+        return value;
+    }
+};
+
+
+
+234.
+method 1:use stack
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        stack<int> st;
+        ListNode* post=head;
+        while(post)
+        {
+            st.push(post->val);
+            post=post->next;
+        }
+        while(head)
+        {
+            if(st.top()==head->val)
+            {
+                st.pop();
+            }
+            else
+            break;
+            head=head->next;
+        }
+        if(st.empty())
+        return true;
+        else
+        return false;
+        
+    }
+};
+
+method 2: reverse use linked list
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* pre=NULL;
+        ListNode* post=head;
+       /** while(post)//reverse as below: position is unchanged!!
+        {
+            ListNode* tmp=post->next;
+            post->next=pre;
+            pre=post;
+            post=tmp;
+        }*/
+        while(post)//reverse as below: position is changed!!
+        {
+            ListNode* tmp=new ListNode(post->val);
+            tmp->next=pre;
+            pre=tmp;
+            post=post->next;
+        }
+        while(head)
+        {
+            if(pre->val!=head->val)
+            {
+            return false;
+            break;
+            }
+            head=head->next;
+            pre=pre->next;
+        }
+        
+        return true;
+    }
+};
+
+
+237. Delete Node in a Linked List
+method 1:Since we do not have access to the node before the one we want to delete, we cannot modify the next pointer of that node in any way. Instead, we have to replace the value of the node we want to delete with the value in the node after it, and then delete the node after it.
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        *(node)=*(node->next);
+      
+    }
+};
+
+method 2 :delete the next node
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        auto next=node->next;
+        *node=*next;
+        delete next;
+    }
+};
+
+258.
+method 1:
+class Solution {
+public:
+    int addDigits(int num) {
+        int res=num,x=num;
+        while(res>=10)
+        {
+            res=0;
+        while(num>0)
+        {
+            res+=num%10;
+            num=num/10;
+        }
+        num=res;
+        }
+        return res;
+    }
+};
+
+method:find the regular;9 kinds of results;
+class Solution {
+public:
+    int addDigits(int num) {       
+        return (num-1)%9+1;//num==0,res=0;num%9==0,res=9.
+    }
+};
+
+
+
+278. First Bad Version
+my method :binary search
+// Forward declaration of isBadVersion API.
+bool isBadVersion(int version);
+
+class Solution {
+public:
+    int firstBadVersion(int n) {
+        int low=1,high=n;
+        while(low<high)
+        {
+            int mid=low+(high-low)/2;
+            if(isBadVersion(mid)) high=mid;
+            else low=mid+1;
+        }
+        return low;
+    }
+};
+
+
+
+283. Move Zeroes
+my method 1:
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int size=nums.size();
+        int i=0;
+        while(i<size)
+        {
+            if(nums[i]==0)
+            {
+                nums.erase(nums.begin()+i);//delete 0
+                nums.push_back(0);
+                size=size-1;//or it will loop endless
+            }
+            else
+            i++;
+        }
+    }
+};
+method 2:All elements before the slow pointer (lastNonZeroFoundAt) are non-zeroes.
+         All elements between the current and slow pointer are zeroes.
+void moveZeroes(vector<int>& nums) {
+    for (int lastNonZeroFoundAt = 0, cur = 0; cur < nums.size(); cur++) {
+        if (nums[cur] != 0) {
+            swap(nums[lastNonZeroFoundAt++], nums[cur]);
+        }
+    }
+}
+
+
+292.Nim Game 
+method: find the regular
+class Solution {
+public:
+    bool canWinNim(int n) {
+        if(n%4==0)
+        return false;
+        else
+        return true;
+    }
+};
+
+
+
+289. Game of Life
+method:
+To solve it in place, we use 2 bits to store 2 states:
+
+[2nd bit, 1st bit] = [next state, current state]
+
+- 00  dead (next) <- dead (current)
+- 01  dead (next) <- live (current)  
+- 10  live (next) <- dead (current)  
+- 11  live (next) <- live (current) 
+In the beginning, every cell is either 00 or 01.
+Notice that 1st state is independent of 2nd state.
+Imagine all cells are instantly changing from the 1st to the 2nd state, at the same time.
+Let's count # of neighbors from 1st state and set 2nd state bit.
+Since every 2nd state is by default dead, no need to consider transition 01 -> 00.
+In the end, delete every cell's 1st state by doing >> 1.
+For each cell's 1st bit, check the 8 pixels around itself, and set the cell's 2nd bit.
+
+Transition 01 -> 11: when board == 1 and lives >= 2 && lives <= 3.
+Transition 00 -> 10: when board == 0 and lives == 3.
+To get the current state, simply do
+
+board[i][j] & 1
+To get the next state, simply do
+
+board[i][j] >> 1
+
+
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+        int m=board.size(),n=board[0].size();
+        for(int i=0;i<m;i++)
+        {
+            for(int j=0;j<n;j++)
+            {
+                int lives=liveNeighbor(i,j,m,n,board);
+                //cout<<lives;
+                if(board[i][j]==1&&(lives==2||lives==3))
+                  board[i][j]=3;
+                if(board[i][j]==0&&lives==3)
+                  board[i][j]=2;
+            }
+        }
+        
+        for(int i=0;i<m;i++)
+        for(int j=0;j<n;j++)
+        board[i][j]>>=1;
+    }
+    
+    int liveNeighbor(int i,int j,int m,int n,vector<vector<int>> board)
+    {
+        int lives=0;
+        for(int x=max(i-1,0);x<=min(i+1,m-1);x++)
+        for(int y=max(j-1,0);y<=min(j+1,n-1);y++)
+        lives+=board[x][y]&1;
+        
+        lives-=board[i][j]&1;
+        return lives;
+    }
+};
+
+
+
+
+295. Find Median from Data Stream
+method:
+class MedianFinder {
+public:
+priority_queue<int> small,large;//large 存负的较大数
+    // Adds a number into the data structure.
+    void addNum(int num) {
+        small.push(num);
+        large.push(-small.top());
+        small.pop();
+        if(small.size()<large.size())
+        {
+            small.push(-large.top());
+            large.pop();
+        }
+    }
+
+    // Returns the median of current data stream
+    double findMedian() {
+        return small.size()==large.size()?(double)(small.top()-large.top())/2:small.top();
+        
+    }
+};
+
+// Your MedianFinder object will be instantiated and called as such:
+// MedianFinder mf;
+// mf.addNum(1);
+// mf.findMedian();
+
+
+
+
+
+301. Remove Invalid Parentheses
+method:DFS
+To make the prefix valid, we need to remove a ‘)’. The problem is: which one? The answer is any one in the prefix. However, if we remove any one, we will generate duplicate results, for example: s = ()), we can remove s[1] or s[2] but the result is the same (). Thus, we restrict ourself to remove the first ) in a series of concecutive )s.
+
+After the removal, the prefix is then valid. We then call the function recursively to solve the rest of the string. However, we need to keep another information: the last removal position. If we do not have this position, we will generate duplicate by removing two ‘)’ in two steps only with a different order.
+For this, we keep tracking the last removal position and only remove ‘)’ after that.
+
+Now one may ask. What about ‘(‘? What if s = ‘(()(()’ in which we need remove ‘(‘?
+The answer is: do the same from right to left.
+However a cleverer idea is: reverse the string and reuse the code!
+
+class Solution {
+public:
+    vector<string> removeInvalidParentheses(string s) {
+        vector<string> res;
+        remove(s, res, 0, 0, "()");
+        return res;
+    }
+    void remove(string s, vector<string> &res, int last_i, int last_j,  string par) {
+    for (int count = 0, i = last_i; i < s.size(); ++i) {
+        if (s[i] == par[0]) count++;
+        if (s[i] == par[1]) count--;
+        if (count >= 0) continue;
+        for (int j = last_j; j <= i; ++j)//last_j?
+            if (s[j] == par[1] && (j == last_j || s[j - 1] != par[1]))
+                remove(s.substr(0, j) + s.substr(j + 1), res, i, j, par);
+        return;
+    }
+    string reversed = s;
+    reverse(reversed.begin(),reversed.end());
+    if (par[0] == '(') // finished left to right
+        remove(reversed, res, 0, 0, ")(");
+    else // finished right to left
+        res.push_back(reversed);
+}
+};
+
+
+
+310. Minimum Height Trees
+method: bfs
+It is easy to see that the last two pointers are from the two ends of the longest path in the graph.
+
+The actual implementation is similar to the BFS topological sort. Remove the leaves, update the degrees of inner vertexes. Then remove the new leaves. Doing so level by level until there are 2 or 1 nodes left. What's left is our answer!
+
+The time complexity and space complexity are both O(n).
+
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<pair<int, int>>& edges) {
+        if (n == 1) return {0};
+        vector<set<int>> graph(n,set<int>());
+        for(pair<int,int> e:edges)
+        {
+            graph[e.first].insert(e.second);
+            graph[e.second].insert(e.first);
+        }
+        vector<int> leaves;
+        for(int i=0;i<n;i++)
+        {
+            if(graph[i].size()==1)
+            leaves.push_back(i);
+        }
+        
+        
+        while(n>2)
+        {
+            n-=leaves.size();
+            vector<int> newleaves;
+            for(int i:leaves)
+            {
+                int nextleave=*graph[i].begin();
+                graph[nextleave].erase(i);
+                if(graph[nextleave].size()==1) newleaves.push_back(nextleave);
+            }
+            leaves=newleaves;
+        }
+        return leaves;
+    }
+};
+
+
+
+
+328. Odd Even Linked List
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        ListNode* even=NULL,*evenhead=NULL,* odd=head;
+        if(!head||head->next==NULL) return head;
+        evenhead=head->next;
+        even=head->next;
+        while(1)
+        {
+            if(even->next)
+            {
+            odd->next=even->next;
+            odd=even->next;
+            }
+           else break;
+           even->next=odd->next;
+            even=odd->next;
+            if(!even) break;
+        }
+        odd->next=evenhead;
+        return head;
+    }
+};
+
+
+329. Longest Increasing Path in a Matrix
+method:dp,dfs
+The key is to cache the distance because it's highly possible to revisit a cell
+
+class Solution {
+private:
+    vector<vector<int>> cache;
+    vector<pair<int, int>> direction;
+    int m, n;
+    int DFS(int i, int j, vector<vector<int>>& matrix) {
+        if(cache[i][j] != 0) return cache[i][j];
+        int longest = 1;
+        for(auto dir : direction) {
+            int x = i + dir.first, y = j + dir.second;
+            if(x < 0 || x >= m || y < 0 || y >= n || matrix[x][y] <= matrix[i][j]) {
+                continue;
+            } else {
+                longest = max(longest, DFS(x, y, matrix) + 1);
+            }
+        }
+        cache[i][j] = longest;
+        return longest;
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        if(matrix.empty()) return 0;
+        m = matrix.size(), n = matrix[0].size();
+        direction.push_back(pair<int, int>(0, 1));
+        direction.push_back(pair<int, int>(0, -1));
+        direction.push_back(pair<int, int>(1, 0));
+        direction.push_back(pair<int, int>(-1, 0));
+        cache = vector<vector<int>>(m, vector<int>(n, 0));
+        int longest = 1;
+        for (int i = 0; i < m; i++) {
+           for(int j = 0; j < n; j++) {
+               longest = max(longest, DFS(i, j, matrix));
+           } 
+        }
+        return longest;
+    }
+};
+
+
+
+331. Verify Preorder Serialization of a Binary Tree
+method:
+Some used stack. Some used the depth of a stack. Here I use a different perspective. In a binary tree, if we consider null as leaves, then
+
+all non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root
+all null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
+Suppose we try to build this tree. During building, we record the difference between out degree and in degree diff = outdegree - indegree. When the next node comes, we then decrease diff by 1, because the node provides an in degree. If the node is not null, we increase diff by 2, because it provides two out degrees. If a serialization is correct, diff should never be negative and diff will be zero when finished.
+
+
+class Solution {
+public:
+    bool isValidSerialization(string preorder) {
+        int diff=1;
+        while(preorder.find_first_of(',')!=string::npos)
+        {
+            int pos=preorder.find_first_of(',');
+            string str=preorder.substr(0,pos);
+            //cout<<pos<<",";
+            if(--diff<0) return false;
+            if(str!="#") diff+=2;
+            preorder=preorder.substr(pos+1);
+        }
+        //cout<<preorder<<endl;
+        if(--diff<0) return false;
+        if(preorder!="#") diff+=2;
+        return diff==0;
+    }
+};
+
+
+
+332. Reconstruct Itinerary
+method:dfs;
+我们在dfs的时候，如果卡住了，那么说明访问到了终点，就把这个点放进vector中。如果没卡住的话，就把点push进stack中（用于回溯），并且一直访问下去，并且经过的点都要记得及时删除，防止走重复的路径。
+class Solution {
+public:
+    vector<string> findItinerary(vector<pair<string, string>> tickets) {
+        map<string,multiset<string>> hs;//maybe the same ticket
+        for(pair<string, string> p:tickets)
+        {
+            hs[p.first].insert(p.second);
+        }
+        vector<string> res;
+        stack<string> s;
+        s.push("JFK");
+        while(!s.empty())
+        {
+            string top=s.top();
+            if(hs[top].size()==0)
+            {
+                res.push_back(top);
+                s.pop();
+            }
+            else
+            {
+                s.push(*hs[top].begin());
+                hs[top].erase(hs[top].begin());
+            }
+        }
+        reverse(res.begin(),res.end());
+        return res;
+        
+    }
+    
+};
+
+
+
+338. Counting Bits
+method 1 :use computed results
+class Solution {
+public:
+    vector<int> countBits(int num) {
+        vector<int> res;
+        res.push_back(0);
+        res.push_back(1);
+        res.push_back(1);
+        res.push_back(2);
+        int begin=2;
+        for(int i=4;i<=num;i++)
+        {
+            if(i%begin==0)
+            {
+                begin=begin*2;
+                res.push_back(1);//it's not true:res[i]=1  unless defined as "vector<int> res(num+1);"
+            }
+            else
+            {
+                res.push_back(res[i%begin]+1);
+            }
+            
+        }
+        if(num<3)
+        res.erase(res.begin()+num+1,res.end());
+        //cout<<res.size()<<endl;
+        return res;
+    }
+};
+
+method 2:use &,ret[0]=0
+class Solution {
+public:
+    vector<int> countBits(int num) {
+        vector<int> ret(num+1, 0);
+        for (int i = 1; i <= num; ++i)
+            ret[i] = ret[i&(i-1)] + 1;
+        return ret;
+    }
+};
+
+
+349.
+method1:hashtable  method2:two pointors
+class Solution {
+public:
+    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+        map<int,int> hs;
+        vector<int> res;
+        for(int i=0;i<nums1.size();i++) hs[nums1[i]]++;
+        for(int i=0;i<nums2.size();i++) 
+        {
+            if(hs.find(nums2[i]) != hs.end())
+            {
+                res.push_back(nums2[i]);
+                hs.erase(nums2[i]);
+            }
+        }
+        return res;
+    }
+};
+
+350.
+method1\A3\BAtwo pointors
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        sort(nums1.begin(),nums1.end());
+        sort(nums2.begin(),nums2.end());
+        vector<int> res;
+        int begin=0;
+        /**for(int i=0;i<nums1.size();i++)
+        {
+            for(int j=begin;j<nums2.size();j++)
+            {
+                if(nums1[i]>nums2[j])
+                {
+                    begin++;
+                }
+                else if(nums1[i]==nums2[j])
+                {
+                    res.push_back(nums1[i]);
+                    begin++;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }*/
+        //more easy write style
+        while(i<num1.size()&&j<num2.size())
+            {
+                if(nums1[i]>nums2[j])
+                {
+                    j++;
+                }
+                else if(nums1[i]==nums2[j])
+                {
+                    res.push_back(nums1[i]);
+                    i++;
+                    j++;
+                }
+                else
+                {
+                    i++;
+                }
+
+            }
+
+
+        return res;
+        
+        
+    }
+};
+
+method2\A3\BA hash table
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> dict;
+        vector<int> res;
+        for(int i = 0; i < (int)nums1.size(); i++) dict[nums1[i]]++;
+        for(int i = 0; i < (int)nums2.size(); i++)
+            if(--dict[nums2[i]] >= 0) res.push_back(nums2[i]);
+        return res;
+    }
+};
+
+
+
+
+355. Design Twitter
+my method:
+class Twitter {
+public:
+map<int,unordered_set<int>> follows;
+int timecount=0;
+map<int,vector<pair<int,int>>> tweetlist;
+    /** Initialize your data structure here. */
+    Twitter() {
+        
+    }
+    
+    /** Compose a new tweet. */
+    void postTweet(int userId, int tweetId) {
+        tweetlist[userId].push_back(make_pair(timecount++,tweetId));
+    }
+    
+    /** Retrieve the 10 most recent tweet ids in the user's news feed. Each item in the news feed must be posted by users who the user followed or by the user herself. Tweets must be ordered from most recent to least recent. */
+    vector<int> getNewsFeed(int userId) {
+        vector<int> res;
+        map<int,int> hs;
+        follows[userId].insert(userId);
+        for(int i:follows[userId])
+        {
+            for(pair<int,int> p:tweetlist[i])
+            {
+                hs[p.first]=p.second;
+            }
+        }
+        map<int,int>::reverse_iterator it;
+        for(it=hs.rbegin();it!=hs.rend();it++)
+        {
+            res.push_back((*it).second);
+            if(res.size()==10) break;
+        }
+        return res;
+    }
+    
+    /** Follower follows a followee. If the operation is invalid, it should be a no-op. */
+    void follow(int followerId, int followeeId) {
+        follows[followerId].insert(followeeId);
+    }
+    
+    /** Follower unfollows a followee. If the operation is invalid, it should be a no-op. */
+    void unfollow(int followerId, int followeeId) {
+        follows[followerId].erase(followeeId);
+    }
+};
+
+/**
+ * Your Twitter object will be instantiated and called as such:
+ * Twitter obj = new Twitter();
+ * obj.postTweet(userId,tweetId);
+ * vector<int> param_2 = obj.getNewsFeed(userId);
+ * obj.follow(followerId,followeeId);
+ * obj.unfollow(followerId,followeeId);
+ */
+
+
+
+
+371. Sum of Two Integers 
+method: bit manipulation
+class Solution {
+public:
+    int getSum(int a, int b) {
+       while(b)  //& can make carry,^ can make +
+        {  
+            int carry = a & b;  
+            a = a ^ b;  //sum without carry
+            b = carry << 1;  //add the carry to previous bit
+        }  
+        return a;  
+    }
+};
+
+
+
+394. Decode String
+my method:dfs
+class Solution {
+public:
+    string decodeString(string s) {
+        int preindex=s.find('[');
+        int postindex=s.find(']');
+       
+        if(preindex==-1)  return s;
+        
+        int precount=0;
+        int i=0;
+        for(i=preindex;i<s.size();i++)
+        {
+            if(s[i]==']') precount--;
+            if(s[i]=='[') precount++;
+            if(precount==0) break;
+        }
+        postindex=i;
+        
+        string res;
+        int numstart=0;
+        for(numstart=0;numstart<s.size();numstart++)//a2[c] first is not num
+        {
+            if(s[numstart]>='0'&&s[numstart]<='9') break;
+        }
+        int num=atoi(s.substr(numstart,preindex-numstart).c_str());
+        if(numstart!=0) res+=s.substr(0,numstart);
+       
+        for(int j=0;j<num;j++)
+        {
+            res+=decodeString(s.substr(preindex+1,postindex-preindex-1));
+        }
+        if(postindex!=s.size()-1) res+=decodeString(s.substr(postindex+1));
+        
+        return res;
+    }
+};
+
+
+373. Find K Pairs with Smallest Sums
+my method:最大堆
+class Solution {
+public:
+struct cmp{
+    bool operator()(pair<int,int> &a,pair<int,int> &b)
+    {
+        return a.first+a.second<b.first+b.second;
+    }
+};
+
+    vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
+        if(nums1.size()==0||nums2.size()==0) return {};
+        priority_queue<pair<int,int>,vector<pair<int,int>>,cmp> q; 
+        for(int i=0;i<nums1.size();i++)
+        for(int j=0;j<nums2.size();j++)
+        {
+            q.push(make_pair(nums1[i],nums2[j]));
+            if(q.size()>k) q.pop();
+        }
+        int size=q.size();
+        vector<pair<int, int>> res(size);
+        for(int i=size-1;i>=0;i--)
+        {
+            res[i]=q.top();
+            q.pop();
+        }
+        return res;
+    }
+    
+};
+
+
+
+378. Kth Smallest Element in a Sorted Matrix
+method: 
+我们使用一个最大堆，然后遍历数组每一个元素，将其加入堆，根据最大堆的性质，大的元素会排到最前面，然后我们看当前堆中的元素个数是否大于k，大于的话就将首元素去掉，循环结束后我们返回堆中的首元素即为所求:
+class Solution {
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        priority_queue<int,vector<int>> q;
+        for(int i=0;i<matrix.size();i++)
+        for(int j=0;j<matrix[0].size();j++)
+        {
+            q.push(matrix[i][j]);
+            if(q.size()>k) q.pop();
+        }
+        return q.top();
+    }
+    
+};
