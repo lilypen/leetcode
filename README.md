@@ -1,1 +1,2 @@
-This is my first-time code in leetcode and some better methods are also included.
+This is my first-time CPP code in leetcode and some better methods are also included.
+Two-weeks' Plan:193->210
