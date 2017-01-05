@@ -1,0 +1,45 @@
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<pair<int, int>>& prerequisites) {
+        if(prerequisites.size()==0) return true;
+        vector<vector<int>> graph=gerateGraph(numCourses,prerequisites);
+        vector<int> degree=computeDegree(numCourses,prerequisites);
+        set<int> res;
+        for(int i=0;i<numCourses;i++)
+        {
+            for(int j=0;j<numCourses;j++)
+            {
+                if(degree[j]==0)
+                {
+                    res.insert(j);
+                    for(int k=0;k<graph[j].size();k++)
+                    {
+                        degree[graph[j][k]]--;
+                    }
+                    graph[j].clear();
+                    degree[j]=-1;
+                }
+            }
+            if(res.size()==numCourses) return true;
+        }
+        return false;
+    }
+    vector<vector<int>> gerateGraph(int numCourses,vector<pair<int, int>>& prerequisites)
+    {
+        vector<vector<int>> res(numCourses);
+        for(auto p:prerequisites)
+        {
+            res[p.second].push_back(p.first);
+        }
+        return res;
+    }
+    vector<int> computeDegree(int numCourses,vector<pair<int, int>>& prerequisites)
+    {
+        vector<int> degree(numCourses,0);
+        for(auto p:prerequisites)
+        {
+            degree[p.first]++;
+        }
+        return degree;
+    }
+};
