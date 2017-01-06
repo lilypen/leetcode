@@ -1,0 +1,48 @@
+/**
+ * Definition for undirected graph.
+ * struct UndirectedGraphNode {
+ *     int label;
+ *     vector<UndirectedGraphNode *> neighbors;
+ *     UndirectedGraphNode(int x) : label(x) {};
+ * };
+ */
+class Solution {
+public:
+map<int,UndirectedGraphNode*> sumlabel;
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+        if(node==NULL) return NULL;
+        UndirectedGraphNode* root=new UndirectedGraphNode(node->label);
+        sumlabel[root->label]=root;
+        for(UndirectedGraphNode *n:node->neighbors )
+        {
+            
+            if(sumlabel.find(n->label)==sumlabel.end())
+            {
+                root->neighbors.push_back(cloneGraph(n));
+            }
+            else
+            {
+                root->neighbors.push_back(sumlabel[n->label]);
+            }
+        }
+        
+        return root;
+    }
+};
+
+//better method
+//clone->map(old,new)!!
+class Solution {
+public:
+    unordered_map<UndirectedGraphNode*, UndirectedGraphNode*> hash;
+    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+       if (!node) return node;
+       if(hash.find(node) == hash.end()) {
+           hash[node] = new UndirectedGraphNode(node -> label);
+           for (auto x : node -> neighbors) {
+                (hash[node] -> neighbors).push_back( cloneGraph(x) );
+           }
+       }
+       return hash[node];
+    }
+};
