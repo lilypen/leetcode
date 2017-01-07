@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<pair<int, int>>& edges) {
+        vector<int> degree1(n,0);
+        for(auto e:edges)
+        {
+            degree1[e.first]++;
+            degree1[e.second]++;
+        }
+        set<int> res;
+        for(int i=0;i<n;i++)
+        {
+            res.insert(i);
+        }
+        int count=n;
+        while(count>2)
+        {
+            vector<int> degree;
+            degree.assign(degree1.begin(),degree1.end());//
+            for(int i=0;i<n;i++)
+            {
+                if(degree1[i]==1)
+                {
+                    for(int j=0;j<n;j++)
+                    {
+                        auto e=edges[j];
+                        if(e.first==i||e.second==i)
+                        {
+                            degree[e.second]--;
+                            degree[e.first]--;
+                            count--;
+                            edges.erase(edges.begin()+j);
+                            break;
+                        }
+                    }
+                    res.erase(i);
+                    //cout<<i<<",";
+                }
+            }
+            degree1.clear();
+            degree1.assign(degree.begin(),degree.end());
+        }
+        vector<int> ress;
+        for(auto r:res)
+        {
+            ress.push_back(r);
+        }
+        return ress;
+    }
+    
+
+};
