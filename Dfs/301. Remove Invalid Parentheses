@@ -1,0 +1,51 @@
+class Solution {
+public:
+vector<string> res;
+    vector<string> removeInvalidParentheses(string s) {
+        removeIP(s,{'(',')'},0);
+        return res;
+    }
+    void removeIP(string s,vector<char> c,int start)
+    {
+        //char c[]={'(',')'};
+        int count=0;
+        if(s=="")
+        {
+            res.push_back("");
+            return;
+        }
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]==c[0])
+            {
+                count++;
+            }
+            if(s[i]==c[1])
+            {
+                count--;
+            }
+            if(count<0)
+            {
+                for(int j=start;j<=i;j++)//=!!!
+                {
+                    
+                    if(s[j]==c[1]&&(j==start||s[j-1]!=c[1]))
+                    {
+                        removeIP(s.substr(0,j)+s.substr(j+1),c,j);
+                    }
+                }
+                //start=i;
+                //cout<<start;
+                return ;
+            }
+        }
+        reverse(s.begin(),s.end());
+        if(c[0]=='('){
+            removeIP(s,{')','('},0);
+        }
+        else
+            res.push_back(s);
+        
+       // return s;
+    }
+};
