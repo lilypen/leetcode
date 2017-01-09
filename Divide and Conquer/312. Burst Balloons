@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int maxCoins(vector<int>& nums) {
+        int n=nums.size()+2;
+        vector<int> newnums(n,1);
+        int dp[n][n]={};
+        for(int i=0;i<nums.size();i++)
+        {
+            newnums[i+1]=nums[i];
+        }
+        
+        for(int k=2;k<n;k++)//左右边界的间距
+        {
+            for(int left=0;left+k<n;left++)
+            {
+                int right=left+k;
+                for(int i=left+1;i<right;i++)
+                {
+                    dp[left][right]=max(dp[left][right],newnums[left]*newnums[i]*newnums[right]+dp[left][i]+dp[i][right]);//last one
+                }
+            }
+        }
+        return dp[0][n-1];
+    }
+};
