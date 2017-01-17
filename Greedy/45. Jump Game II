@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int n=nums.size();
+        if(n<2) return 0;
+        int maxstep=nums[0];
+        int count=1,i=1;
+        while(i<nums.size()-1)
+        {
+            
+            if(maxstep>=nums.size()-1) break;
+            count++;
+            int tmp=maxstep;
+            while(i<=tmp&&i<=nums.size()-1)
+            {
+                maxstep=max(maxstep,i+nums[i]);
+                i++;
+            }
+        }
+        return count;
+        
+    }
+};
